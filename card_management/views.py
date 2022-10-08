@@ -37,7 +37,7 @@ def User_list(request):
         if user_serializer.is_valid():
             user_serializer.save()
             return JsonResponse(user_serializer.data, status=status.HTTP_201_CREATED) 
-        return JsonResponse(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'message': 'Email does exists'}, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
         count = User.objects.all().delete()
@@ -74,7 +74,7 @@ def user_login(request):
         body = JSONParser().parse(request)
         user = User.objects.get(email=body["email"],password=body["password"])
     except User.DoesNotExist: 
-        return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({'message': 'Incorrect email or password'}, status=status.HTTP_404_NOT_FOUND)
     if request.method == 'POST': 
         user_serializer = UserSerializer(user) 
         return JsonResponse(user_serializer.data)
